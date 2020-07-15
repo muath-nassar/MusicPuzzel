@@ -2,14 +2,14 @@ package com.example.musicpuzzel
 
 import android.app.ProgressDialog
 import android.content.Context
+import android.media.AudioManager
+import android.media.MediaActionSound
 import android.media.MediaPlayer
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     //---------------------------------------------
     private var isPlaying = false
+    private var audioManager: AudioManager? = null
     private var mp: MediaPlayer? = null
+    private var clickSound: MediaPlayer? = null
     private lateinit var gridLayoutChoose: GridLayoutManager
     private lateinit var gridLayoutResult: GridLayoutManager
     private lateinit var choseAdapter: ChoseAdapter
@@ -51,8 +53,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        clickSound = MediaPlayer.create(this, R.raw.click)
         gridLayoutChoose = object : GridLayoutManager(this, 9) {
             override fun canScrollHorizontally(): Boolean {
                 return false
@@ -121,9 +123,12 @@ class MainActivity : AppCompatActivity() {
 
 
         override fun onBindViewHolder(holder: ChoseAdapter.MyViewHolder, position: Int) {
+
             val letter = data[position].toString()
             holder.tvChar.text = letter
             holder.itemView.setOnClickListener {
+                audioManager!!.playSoundEffect(SoundEffectConstants.CLICK,1.0f);
+
                 holder.itemView.visibility = View.INVISIBLE
                 holder.itemView.isClickable = false
                 val emptyPosition = resultAdapter.getLowestEmptyButton()
@@ -181,6 +186,7 @@ class MainActivity : AppCompatActivity() {
             holder.itemView.setBackgroundResource(R.drawable.result_button_shap)
             holder.itemView.setOnClickListener {
 
+                audioManager!!.playSoundEffect(SoundEffectConstants.CLICK,1.0f);
                 holder.tvChar.text = " "
                 data[position].char = ' '
                 notifyDataSetChanged()
@@ -294,23 +300,24 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-private fun newRound(){
-    val maxLength = allTracks.size
-    if (indexOfTrack<maxLength){
-        mp!!.stop()
-        track = allTracks[indexOfTrack]
-        nameChars = track.getNameChars()
-        chars = track.reArrange()
-        resultAdapter = ResultAdapter(this,nameChars)
-        choseAdapter = ChoseAdapter(this,chars)
-        rvAnswerSquares.adapter = resultAdapter
-        rvChoose.adapter = choseAdapter
-        downloadSound(track.sound!!)
-        runOnPlayButton()
-        indexOfTrack++
-    }else{
-        Toast.makeText(this,"ممتاز لقد أتممت جميع المراحل",Toast.LENGTH_SHORT).show()
-    }
+    private fun newRound() {
+        val maxLength = allTracks.size
+        if (indexOfTrack < maxLength) {
+            mp!!.stop()
+            track = allTracks[indexOfTrack]
+            nameChars = track.getNameChars()
+            chars = track.reArrange()
+            resultAdapter = ResultAdapter(this, nameChars)
+            choseAdapter = ChoseAdapter(this, chars)
+            gridLayoutResult.spanCount = nameChars.size
+            rvAnswerSquares.adapter = resultAdapter
+            rvChoose.adapter = choseAdapter
+            downloadSound(track.sound!!)
+            runOnPlayButton()
+            indexOfTrack++
+        } else {
+            Toast.makeText(this, "ممتاز لقد أتممت جميع المراحل", Toast.LENGTH_SHORT).show()
+        }
 
-}
+    }
 }

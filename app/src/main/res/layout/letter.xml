@@ -16,6 +16,7 @@
         android:fontFamily="@font/kufi_bold"
         android:textColor="#673AB7"
         android:textAlignment="center"
-        android:textSize="@dimen/_12ssp"/>
+        android:textSize="@dimen/_12ssp"
+        />
 
 </com.google.android.material.card.MaterialCardView>

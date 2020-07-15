@@ -47,8 +47,5 @@ class SoundClip(val name: String, val sound: String?, val type: String?, val des
         val source = "ضصثقفغعهخحجدشسيبلاتنمكطئءؤرلاىةوزظذ"
         val x= Random().ints(getSaltNumber(name).toLong(), 0, source.length).toArray().map (source::get).joinToString("")
         return x.toCharArray()
-            /*.asSequence()
-            .map(source::get)
-            .joinToString("")*/
     }
 }
