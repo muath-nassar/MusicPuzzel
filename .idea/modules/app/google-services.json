@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "177835304449",
+    "firebase_url": "https://musicpuzzel.firebaseio.com",
+    "project_id": "musicpuzzel",
+    "storage_bucket": "musicpuzzel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177835304449:android:fecc71c8c33f7c5ce9c200",
+        "android_client_info": {
+          "package_name": "com.example.musicpuzzel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177835304449-9s55u3q46n710in2tmhb41m1ainbb74u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.musicpuzzel",
+            "certificate_hash": "cfbb30ebdb073edfc0ff18233a4a10a9f67f815f"
+          }
+        },
+        {
+          "client_id": "177835304449-9tvec7mqdfnt0a8pu801962s9b4e3j5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnM7yokFninNSh0A7mACWGM8IdqukfxLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177835304449-9tvec7mqdfnt0a8pu801962s9b4e3j5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
