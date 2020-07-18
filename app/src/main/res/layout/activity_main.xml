@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    android:theme="@style/AppTheme"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -22,18 +21,47 @@
             android:layout_gravity="center_vertical"
             android:text="10"
             android:textSize="@dimen/_14ssp" />
+        <ImageButton
+            android:id="@+id/btnHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_help"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Help" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="#673AB7"
+        android:fontFamily="@font/kufi_bold"
+
+        android:paddingStart="@dimen/_15sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingEnd="@dimen/_15sdp"
+        android:paddingBottom="@dimen/_5sdp"
+
+        android:textColor="#fff"
+        android:textSize="@dimen/_16ssp"
+      />
+
 
     <ImageButton
         android:id="@+id/btnPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top_bar"
+        android:layout_below="@+id/tvType"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/_20sdp"
         android:background="#00FFFFFF"
         android:elevation="@dimen/_15sdp"
-        android:src="@drawable/ic_baseline_play_circle_filled_24" />
+        android:src="@drawable/ic_baseline_play_circle_filled_24"
+        android:contentDescription="@string/common_google_play_services_enable_button" />
 
     <ProgressBar
         android:id="@+id/progress_horizontal"
@@ -45,6 +73,18 @@
         android:layout_marginEnd="@dimen/_20sdp"
         android:max="100"
         android:progress="1" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvDescription"
+        android:textSize="@dimen/_14ssp"
+        android:visibility="invisible"
+        android:fontFamily="@font/kufi_regualar"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/progress_horizontal"
+        android:textAlignment="center"
+        android:padding="@dimen/_20sdp"
+        android:layout_margin="@dimen/_10sdp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -77,4 +117,31 @@
             android:padding="@dimen/_5sdp"
             app:reverseLayout="false" />
     </RelativeLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/categoryUpdateName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+
+        android:hint="Product name"
+
+        android:pointerIcon="wait"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+
+        app:boxStrokeWidth="2dp"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true">
+
+
+
+
+    </com.google.android.material.textfield.TextInputLayout>
 </RelativeLayout>

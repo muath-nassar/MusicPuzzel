@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">MusicPuzzel</string>
     <string name="downloading">جاري تحميل المقطع الصوتي!!</string>
+    <string name="password">\u2022\u2022\u2022\u2022\u2022\u2022</string>
+    <string name="revealChar">اكشف حرف</string>
+    <string name="showDescription">اظهر التفاصيل</string>
+    <string name="showType">النوع</string>
+    <string name="helpMenu">قائمة المساعدات</string>
 </resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:theme="@style/MaterialStyle"
+    android:background="@drawable/transparent_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+    android:backgroundTint="#00FFFFFF">
+        <LinearLayout
+            android:id="@+id/cardHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/_15sdp"
+            android:background="@drawable/help_shape"
+            android:elevation="@dimen/_3sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_15sdp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kufi_bold"
+                android:text="@string/helpMenu"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/_14ssp" />
+
+            <Button
+                android:id="@+id/btnRevealLetter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:backgroundTint="#F44336"
+                android:fontFamily="@font/kufi_bold"
+                android:text="@string/revealChar"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_12ssp" />
+
+            <Button
+                android:id="@+id/btnShowType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:backgroundTint="#FFC107"
+                android:fontFamily="@font/kufi_bold"
+                android:text="@string/showType"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_12ssp" />
+
+            <Button
+                android:id="@+id/btnShowDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:backgroundTint="#3F51B5"
+                android:fontFamily="@font/kufi_bold"
+                android:text="@string/showDescription"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:background="@drawable/circle_button"
+            android:id="@+id/btnHelpClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/_4sdp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:translationZ="10dp"
+
+        />
+
+    </RelativeLayout>
