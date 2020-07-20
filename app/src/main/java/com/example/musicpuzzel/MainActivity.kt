@@ -1,40 +1,34 @@
 package com.example.musicpuzzel
 
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.media.AudioManager
-import android.media.MediaActionSound
 import android.media.MediaPlayer
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
+import android.os.Handler
 import android.util.Log
 import android.view.*
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicpuzzel.extra.MyApplicationClass.Companion.allTracks
 import com.example.musicpuzzel.extra.OnHelpDialogInterface
 import com.example.musicpuzzel.model.CharWithPosition
-import com.example.musicpuzzel.model.HelpCustomDialog
+import com.example.musicpuzzel.extra.HelpCustomDialog
+import com.example.musicpuzzel.extra.OnSuccessDialogInterface
+import com.example.musicpuzzel.extra.SuccessDialog
 import com.example.musicpuzzel.model.SoundClip
-import com.google.android.gms.tasks.OnCanceledListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.letter.view.*
+import kotlinx.android.synthetic.main.success_dialog.*
 import java.lang.Exception
 
 
-class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
+class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogInterface {
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var chars: MutableList<Char>
     private lateinit var nameChars: MutableList<CharWithPosition>
@@ -42,7 +36,7 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
 
     //--------------------------------
     lateinit var soundDownloadThread: Thread
-    private lateinit var alertDialog: ProgressDialog
+    lateinit var successDialog: SuccessDialog
 
     //---------------------------------------------
     private var isPlaying = false
@@ -139,9 +133,9 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
 
             val letter = data[position].toString()
             holder.tvChar.text = letter
+
             holder.itemView.setOnClickListener {
                 audioManager!!.playSoundEffect(SoundEffectConstants.CLICK, 1.0f);
-
                 holder.itemView.visibility = View.INVISIBLE
                 holder.itemView.isClickable = false
                 val emptyPosition = resultAdapter.getLowestEmptyButton()
@@ -153,6 +147,7 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
 
                     if (resultAdapter.checkSolution(track.getNameWithoutSpace())) {
                         onRightAnswer()
+                        Log.e("mmm","right answer")
                     } else {
                         onWrongAnswer()
                     }
@@ -217,7 +212,7 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
 
                     holder.tvChar.text = " "
                     data[position].char = ' '
-                    notifyDataSetChanged()
+                    notifyDataSetChangedOverride()
 
                     choseAdapter.activate(data[position].choosedPosition)
                 }
@@ -258,22 +253,34 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
 
         fun notifyChange(itemPosition: Int, setPosition: Int) {
             data[itemPosition].choosedPosition = setPosition
-            notifyDataSetChanged()
+            notifyDataSetChangedOverride()
         }
-        fun revealLetter(position: Int,char: Char){
+/*        fun revealLetter(position: Int,char: Char){
             val holder = rvAnswerSquares.findViewHolderForLayoutPosition(position)
             (holder as MViewHolder).tvChar.setText(char.toString())
 
            data[position].char = char
           //  notifyDataSetChanged()
             holder.itemView.isClickable = false
+        }*/
+        fun notifyDataSetChangedOverride(){
+            notifyDataSetChanged()
+            if (selectedPositionsRandomely.size>0){
+                for (position in selectedPositionsRandomely){
+                    val holder = rvAnswerSquares.findViewHolderForLayoutPosition(position)
+                    holder!!.itemView.isClickable=false
+                }
+            }
         }
+
     }
 //******************************************************************************************
 
     private fun onRightAnswer() {
-        Toast.makeText(this, "correct answer", Toast.LENGTH_LONG).show()
+        successDialog = SuccessDialog(this)
+        successDialog.showDialog()
         newRound()
+        Toast.makeText(this, "correct answer", Toast.LENGTH_LONG).show()
     }
 
     private fun onWrongAnswer() {
@@ -281,9 +288,7 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
     }
 
     private fun downloadSound(url: String) {
-        alertDialog = ProgressDialog(this)
-        alertDialog.setMessage("انتظر من فضلك! يجري تنزيل الصوت")
-        alertDialog.show()
+
 
         if (mp == null) {
             mp = MediaPlayer()
@@ -298,7 +303,6 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
         }
         soundDownloadThread.start()
         soundDownloadThread.join()
-        alertDialog.dismiss()
 
 
     }
@@ -340,8 +344,37 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
     }
 
     private fun newRound() {
+
+
+
+
+
+
         val maxLength = allTracks.size
         if (indexOfTrack < maxLength) {
+            Thread{
+                mp!!.stop()
+                track = allTracks[indexOfTrack]
+                downloadSound(track.sound!!)
+                selectedPositionsRandomely.clear()
+                nameChars = track.getNameChars()
+                chars = track.reArrange()
+                resultAdapter = ResultAdapter(this, nameChars)
+                choseAdapter = ChoseAdapter(this, chars)
+
+                runOnUiThread {
+                    gridLayoutResult.spanCount = nameChars.size
+                    tvType.setText(R.string.password)
+                    tvDescription.visibility = View.GONE
+                    tvDescription.text = track.description
+                    rvAnswerSquares.adapter = resultAdapter
+                    rvChoose.adapter = choseAdapter
+                    successDialog.setBtnNextRoundVisibilityOn()
+                    successDialog.dissableProgressBar()
+                    indexOfTrack++
+                }
+            }.start()
+            /*
             mp!!.stop()
             track = allTracks[indexOfTrack]
             selectedPositionsRandomely.clear()
@@ -356,8 +389,9 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
             rvAnswerSquares.adapter = resultAdapter
             rvChoose.adapter = choseAdapter
             downloadSound(track.sound!!)
-            runOnPlayButton()
-            indexOfTrack++
+            successDialog.setBtnNextRoundVisibilityOn()
+            successDialog.dissableProgressBar()
+            indexOfTrack++*/
         } else {
             Toast.makeText(this, "ممتاز لقد أتممت جميع المراحل", Toast.LENGTH_SHORT).show()
         }
@@ -414,5 +448,13 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface {
 
     override fun showDescription() {
         tvDescription.visibility = View.VISIBLE
+        //****************
+
+    }
+
+
+
+    override fun onSuccessDialog() {
+        runOnPlayButton()
     }
 }

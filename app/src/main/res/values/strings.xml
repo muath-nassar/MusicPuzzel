@@ -6,4 +6,8 @@
     <string name="showDescription">اظهر التفاصيل</string>
     <string name="showType">النوع</string>
     <string name="helpMenu">قائمة المساعدات</string>
+
+    <!-- these strings for success dialog-->
+    <string name="successTitle">اجابة صحيحة</string>
+    <string name="nextRound">التالي</string>
 </resources>

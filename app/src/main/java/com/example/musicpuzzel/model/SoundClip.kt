@@ -36,11 +36,12 @@ class SoundClip(val name: String, val sound: String?, val type: String?, val des
          return name
      }
     private fun getSaltNumber(text:String): Int{
-        when(text.length){
+        return 18-text.length
+      /*  when(text.length){
             in 0..5 -> return 7
             in 6..9 ->return 5
             else -> return 3
-        }
+        }*/
     }
 
     private fun generateRandomeChars(): CharArray{

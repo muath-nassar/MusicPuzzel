@@ -1,4 +1,4 @@
-package com.example.musicpuzzel.model
+package com.example.musicpuzzel.extra
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.popup_help_dialog.view.*
 class HelpCustomDialog(context: Context) : Dialog(context) {
     private val delegate = context as OnHelpDialogInterface
     private val dialog = Dialog(context)
-    public fun showDialog() {
+     fun showDialog() {
 
         dialog.setContentView(R.layout.popup_help_dialog)
         dialog.setCancelable(true)
