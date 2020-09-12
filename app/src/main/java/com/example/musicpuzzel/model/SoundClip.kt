@@ -1,8 +1,6 @@
 package com.example.musicpuzzel.model
 
 import android.os.Build
-import androidx.annotation.RequiresApi
-import java.io.FileDescriptor
 import java.util.*
 
 class SoundClip(val name: String, val sound: String?, val type: String?, val description: String?){
@@ -45,8 +43,25 @@ class SoundClip(val name: String, val sound: String?, val type: String?, val des
     }
 
     private fun generateRandomeChars(): CharArray{
-        val source = "ضصثقفغعهخحجدشسيبلاتنمكطئءؤرلاىةوزظذ"
-        val x= Random().ints(getSaltNumber(name).toLong(), 0, source.length).toArray().map (source::get).joinToString("")
-        return x.toCharArray()
+        val source = "ذدجحخهعغفقثصضطكمنتاألبيسشظزوةىرء"
+        val charArray: CharArray
+        if (false && Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
+            val x= Random().ints(getSaltNumber(name).toLong(), 0, source.length).toArray().map (source::get).joinToString("")
+            charArray = x.toCharArray()
+            return charArray
+        }else{
+            val arrayOfChars = source.toCharArray()
+            val mList = mutableListOf<Char>()
+            for (char in arrayOfChars){
+                mList.add(char)
+            }
+            charArray = CharArray(getSaltNumber(name))
+            for (i in 0 until getSaltNumber(name)){
+                charArray[i] = mList.random()
+            }
+            return charArray
+        }
+
+
     }
 }

@@ -22,7 +22,10 @@ fun showDialog(){
     fun setBtnNextRoundVisibilityOn(){
         dialog.btnNextRound.visibility = View.VISIBLE
     }
-    fun dissableProgressBar(){
+    fun disableProgressBar(){
         dialog.progress_circular.visibility = View.GONE
+    }
+    fun cancelDialog(){
+        dialog.cancel()
     }
 }

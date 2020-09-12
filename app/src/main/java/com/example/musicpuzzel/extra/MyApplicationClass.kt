@@ -15,7 +15,7 @@ class MyApplicationClass : Application() {
 
 
     companion object {
-
+        val appAdmobId = "ca-app-pub-4028510729348966~8148694043"
        val allTracks = mutableListOf<SoundClip>()
         private var aSinglton: MyApplicationClass? = null
         fun getInstance(): MyApplicationClass {

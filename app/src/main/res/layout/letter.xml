@@ -10,7 +10,6 @@
     android:layout_marginTop="@dimen/_3sdp">
     <TextView
         android:id="@+id/tvChar"
-
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
         android:fontFamily="@font/kufi_bold"

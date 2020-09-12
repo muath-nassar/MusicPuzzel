@@ -4,10 +4,15 @@
     <string name="password">\u2022\u2022\u2022\u2022\u2022\u2022</string>
     <string name="revealChar">اكشف حرف</string>
     <string name="showDescription">اظهر التفاصيل</string>
-    <string name="showType">النوع</string>
+    <string name="showType">أظهر النوع</string>
     <string name="helpMenu">قائمة المساعدات</string>
 
     <!-- these strings for success dialog-->
     <string name="successTitle">اجابة صحيحة</string>
     <string name="nextRound">التالي</string>
+    <string name="help">Help</string>
+    <string name="help_icon_title">المساعدة</string>
+    <string name="show_adv">مشاهدة إعلان</string>
+    <string name="share_app_btn">نشر التطبيق</string>
+    <string name="cancel">Cancel</string>
 </resources>

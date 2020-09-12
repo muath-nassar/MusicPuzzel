@@ -24,46 +24,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/kufi_bold"
-            android:text="@string/successTitle"
+            android:text="اضافة نجوم"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/_14ssp" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_success"
-            android:layout_gravity="center"
-         />
-
-        <ProgressBar
-            android:id="@+id/progress_circular"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_gravity="center_horizontal"
-            android:indeterminate="true" />
-
 
         <Button
-            android:id="@+id/btnNextRound"
+            android:id="@+id/btnRevealLetter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:backgroundTint="#F44336"
+            android:fontFamily="@font/kufi_bold"
+            android:text="@string/show_adv"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_12ssp" />
+
+        <Button
+            android:id="@+id/btnShowType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
-            android:backgroundTint="#3F51B5"
+            android:backgroundTint="#FFC107"
             android:fontFamily="@font/kufi_bold"
-            android:text="@string/nextRound"
+            android:text="@string/share_app_btn"
             android:textColor="#ffffff"
-            android:textSize="@dimen/_12ssp"
-            android:visibility="gone" />
+            android:textSize="@dimen/_12ssp" />
+
+
     </LinearLayout>
-<!--
+
     <ImageButton
         android:background="@drawable/circle_button"
-        android:id="@+id/btnSuccessClose"
+        android:id="@+id/btnHelpClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="@dimen/_4sdp"
         android:src="@drawable/ic_baseline_close_24"
         android:translationZ="10dp"
-        />
--->
+
+        android:contentDescription="@string/cancel" />
+
 </RelativeLayout>

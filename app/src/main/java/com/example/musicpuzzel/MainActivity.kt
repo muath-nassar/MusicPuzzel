@@ -1,15 +1,11 @@
 package com.example.musicpuzzel
 
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -24,7 +20,6 @@ import com.example.musicpuzzel.extra.SuccessDialog
 import com.example.musicpuzzel.model.SoundClip
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.letter.view.*
-import kotlinx.android.synthetic.main.success_dialog.*
 import java.lang.Exception
 
 
@@ -32,11 +27,12 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var chars: MutableList<Char>
     private lateinit var nameChars: MutableList<CharWithPosition>
-    private val selectedPositionsRandomely = mutableListOf<Int>()
+    private val selectedPositionsRandomly = mutableListOf<Int>()
 
     //--------------------------------
     lateinit var soundDownloadThread: Thread
     lateinit var successDialog: SuccessDialog
+    lateinit var successThread: Thread
 
     //---------------------------------------------
     private var isPlaying = false
@@ -95,7 +91,6 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
 
     }
 
-
     override fun onResume() {
         super.onResume()
         downloadSound(track.sound!!)
@@ -106,8 +101,21 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
             val dialog = HelpCustomDialog(this)
             dialog.showDialog()
         }
+        btnHelp.setOnClickListener {
+            val dialog = HelpCustomDialog(this)
+            dialog.showDialog()
+        }
+        tvHelp.setOnClickListener {
+            val dialog = HelpCustomDialog(this)
+            dialog.showDialog()
+        }
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mp!!.release()
     }
 
 //**********************************************************************************************
@@ -147,7 +155,6 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
 
                     if (resultAdapter.checkSolution(track.getNameWithoutSpace())) {
                         onRightAnswer()
-                        Log.e("mmm","right answer")
                     } else {
                         onWrongAnswer()
                     }
@@ -207,18 +214,13 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
             holder.tvChar.text = data[position].char.toString()
             holder.itemView.setBackgroundResource(R.drawable.result_button_shap)
             holder.itemView.setOnClickListener {
-                audioManager!!.playSoundEffect(SoundEffectConstants.CLICK, 1.0f);
+                audioManager!!.playSoundEffect(SoundEffectConstants.CLICK, 1.0f)
                 if (holder.tvChar.text!=" "){
-
                     holder.tvChar.text = " "
                     data[position].char = ' '
                     notifyDataSetChangedOverride()
-
                     choseAdapter.activate(data[position].choosedPosition)
                 }
-
-
-
             }
         }
 
@@ -239,7 +241,6 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
                 if (i.char == ' ') return false
             }
             return true
-
         }
 
         fun checkSolution(solution: String): Boolean {
@@ -265,8 +266,8 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
         }*/
         fun notifyDataSetChangedOverride(){
             notifyDataSetChanged()
-            if (selectedPositionsRandomely.size>0){
-                for (position in selectedPositionsRandomely){
+            if (selectedPositionsRandomly.size>0){
+                for (position in selectedPositionsRandomly){
                     val holder = rvAnswerSquares.findViewHolderForLayoutPosition(position)
                     holder!!.itemView.isClickable=false
                 }
@@ -279,8 +280,8 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
     private fun onRightAnswer() {
         successDialog = SuccessDialog(this)
         successDialog.showDialog()
+        tvStage.text = (tvStage.text.toString().toInt() + 1).toString()
         newRound()
-        Toast.makeText(this, "correct answer", Toast.LENGTH_LONG).show()
     }
 
     private fun onWrongAnswer() {
@@ -312,7 +313,7 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
             if (mp!!.isPlaying) {
                 mp!!.pause()
                 isPlaying = false
-                btnPlay.setImageResource(R.drawable.ic_baseline_play_circle_filled_24)
+                btnPlay.setImageResource(R.drawable.btn_play)
 
             } else {
                 playMusic()
@@ -325,11 +326,11 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
         progress_horizontal.max = mp!!.duration
         mp!!.start()
         isPlaying = true
-        btnPlay.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24)
+        btnPlay.setImageResource(R.drawable.ic_btn_pause)
         Thread {
 
             mp!!.setOnCompletionListener {
-                btnPlay.setImageResource(R.drawable.ic_baseline_play_circle_filled_24)
+                btnPlay.setImageResource(R.drawable.btn_play)
                 isPlaying=false
             }
 
@@ -344,19 +345,13 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
     }
 
     private fun newRound() {
-
-
-
-
-
-
         val maxLength = allTracks.size
         if (indexOfTrack < maxLength) {
-            Thread{
+            successThread = Thread{
                 mp!!.stop()
                 track = allTracks[indexOfTrack]
                 downloadSound(track.sound!!)
-                selectedPositionsRandomely.clear()
+                selectedPositionsRandomly.clear()
                 nameChars = track.getNameChars()
                 chars = track.reArrange()
                 resultAdapter = ResultAdapter(this, nameChars)
@@ -370,32 +365,19 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
                     rvAnswerSquares.adapter = resultAdapter
                     rvChoose.adapter = choseAdapter
                     successDialog.setBtnNextRoundVisibilityOn()
-                    successDialog.dissableProgressBar()
+                    successDialog.disableProgressBar()
                     indexOfTrack++
                 }
-            }.start()
-            /*
-            mp!!.stop()
-            track = allTracks[indexOfTrack]
-            selectedPositionsRandomely.clear()
-            tvType.setText(R.string.password)
-            tvDescription.visibility = View.GONE
-            tvDescription.text = track.description
-            nameChars = track.getNameChars()
-            chars = track.reArrange()
-            resultAdapter = ResultAdapter(this, nameChars)
-            choseAdapter = ChoseAdapter(this, chars)
-            gridLayoutResult.spanCount = nameChars.size
-            rvAnswerSquares.adapter = resultAdapter
-            rvChoose.adapter = choseAdapter
-            downloadSound(track.sound!!)
-            successDialog.setBtnNextRoundVisibilityOn()
-            successDialog.dissableProgressBar()
-            indexOfTrack++*/
-        } else {
-            Toast.makeText(this, "ممتاز لقد أتممت جميع المراحل", Toast.LENGTH_SHORT).show()
-        }
+            }
+            successThread.start()
 
+        } else {
+            successDialog.cancelDialog()
+            Toast.makeText(this, "ممتاز لقد أتممت جميع المراحل", Toast.LENGTH_SHORT).show()
+
+            mp!!.stop()
+            isPlaying=false
+        }
     }
 
     private fun funOpenForFirstTimeHandeling() {
@@ -412,17 +394,17 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
 
     override fun revealLetter() {
         val text = track.getNameWithoutSpace()
-        if (selectedPositionsRandomely.size < text.length) {
+        if (selectedPositionsRandomly.size < text.length) {
 
 
             var x: Int
             do {
                 x =  (Math.random()*text.length).toInt()
-            } while (selectedPositionsRandomely.contains(x))
+            } while (selectedPositionsRandomly.contains(x))
             val char = text[x]
             val chosePositionSelected = choseAdapter.deactivate(char)
             //resultAdapter.revealLetter(x,char)
-            selectedPositionsRandomely.add(x)
+            selectedPositionsRandomly.add(x)
 
 
            // val emptyPosition = resultAdapter.getLowestEmptyButton()
@@ -452,9 +434,9 @@ class MainActivity : AppCompatActivity(), OnHelpDialogInterface,OnSuccessDialogI
 
     }
 
-
-
     override fun onSuccessDialog() {
         runOnPlayButton()
     }
+
+
 }
